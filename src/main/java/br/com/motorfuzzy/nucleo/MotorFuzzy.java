@@ -1,6 +1,8 @@
 package br.com.motorfuzzy.nucleo;
 
 import br.com.motorfuzzy.conjuntos.ConjuntoFuzzy;
+import br.com.motorfuzzy.defuzzificacao.DefuzzificacaoCentroide;
+import br.com.motorfuzzy.defuzzificacao.MetodoDefuzzificacao;
 import br.com.motorfuzzy.inferencia.ResultadoInferencia;
 import br.com.motorfuzzy.regras.RegraFuzzy;
 import br.com.motorfuzzy.variaveis.VariavelFuzzy;
@@ -103,5 +105,21 @@ public class MotorFuzzy {
         }
 
         return resultado;
+    }
+
+    public double calcular(Map<String, Double> valoresEntrada, String nomeSaida, double minimo, double maximo) {
+
+        return calcular(valoresEntrada, nomeSaida, minimo, maximo, new DefuzzificacaoCentroide());
+    }
+
+    public double calcular(Map<String, Double> valoresEntrada, String nomeSaida, double minimo, double maximo, MetodoDefuzzificacao metodo) {
+
+        if (metodo == null) {
+            throw new IllegalArgumentException("O método de defuzzificação não pode ser nulo.");
+        }
+
+        ResultadoInferencia resultado = inferir(valoresEntrada, nomeSaida);
+
+        return metodo.calcular(resultado, minimo, maximo);
     }
 }

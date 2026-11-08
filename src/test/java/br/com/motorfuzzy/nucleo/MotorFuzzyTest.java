@@ -55,6 +55,40 @@ class MotorFuzzyTest {
     }
 
     @Test
+    void deveExecutarInferenciaEDefuzzificacao() {
+
+        VariavelFuzzy temperatura = new VariavelFuzzy("temperatura");
+
+        temperatura.adicionarConjunto("alta", new FuncaoTriangular(20, 40, 60));
+
+        VariavelFuzzy risco = new VariavelFuzzy("risco");
+
+        risco.adicionarConjunto("alto", new FuncaoTriangular(50, 75, 100));
+
+        MotorFuzzy motor = new MotorFuzzy();
+
+        motor.adicionarEntrada(temperatura);
+        motor.adicionarSaida(risco);
+
+        motor.adicionarRegra(
+                new RegraFuzzy(
+                        new CondicaoSimples("temperatura", "alta"),
+                        "risco",
+                        "alto"
+                )
+        );
+
+        double resultado = motor.calcular(
+                Map.of("temperatura", 30.0),
+                "risco",
+                0,
+                100
+        );
+
+        assertEquals(75.0, resultado, 0.001);
+    }
+
+    @Test
     void deveRejeitarVariavelDeSaidaInexistente() {
         MotorFuzzy motor = new MotorFuzzy();
 
