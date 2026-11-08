@@ -65,4 +65,17 @@ public class VariavelFuzzy {
     public Map<String, ConjuntoFuzzy> getConjuntos() {
         return Collections.unmodifiableMap(conjuntos);
     }
+
+    public ConjuntoFuzzy obterConjunto(String nomeConjunto) {
+
+        ConjuntoFuzzy conjunto = conjuntos.get(nomeConjunto);
+
+        if (conjunto == null) {
+            throw new IllegalArgumentException(
+                    "Conjunto fuzzy não encontrado: " + nomeConjunto
+            );
+        }
+
+        return conjunto;
+    }
 }
