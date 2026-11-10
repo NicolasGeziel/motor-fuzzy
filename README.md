@@ -64,23 +64,17 @@ A força de ativação de cada regra é determinada pelo grau de seu antecedente
 
 O consequente de cada regra é recortado pela força de ativação:
 
-\[
-\mu_{\text{regra}}(z) = \min(\alpha, \mu_{\text{consequente}}(z))
-\]
+<img width="325" height="62" alt="image" src="https://github.com/user-attachments/assets/13477134-9771-4ae5-af5d-5a9d3a04c5a7" />
 
 As contribuições das regras para a variável de saída são combinadas pelo máximo:
 
-\[
-\mu_{\text{agregada}}(z) = \max_i \mu_{\text{regra}_i}(z)
-\]
+<img width="404" height="78" alt="image" src="https://github.com/user-attachments/assets/deb2f2e1-e9f6-49b3-80d5-b961e62e8ef5" />
 
 ### 4. Defuzzificação
 
 A saída fuzzy agregada é convertida em um número pelo método do **centroide**:
 
-\[
-z^* = \frac{\int_a^b z\,\mu_{\text{agregada}}(z)\,dz}{\int_a^b \mu_{\text{agregada}}(z)\,dz}
-\]
+<img width="355" height="92" alt="image" src="https://github.com/user-attachments/assets/cb7bcb3c-aa63-4a9f-87bf-7ffb4e872fae" />
 
 A integração é **aproximada numericamente pela regra dos trapézios**. Por padrão são utilizadas 1.000 divisões; esse valor pode ser configurado por `new DefuzzificacaoCentroide(divisoes)`.
 
