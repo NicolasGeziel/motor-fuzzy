@@ -26,4 +26,9 @@ public class CondicaoOu implements CondicaoFuzzy {
 
         return Math.max(grauEsquerda, grauDireita);
     }
+
+    @Override
+    public String descrever() {
+        return "(" + esquerda.descrever() + " OU " + direita.descrever() + ")";
+    }
 }

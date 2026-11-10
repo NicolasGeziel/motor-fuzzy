@@ -26,4 +26,9 @@ public class CondicaoE implements CondicaoFuzzy {
 
         return Math.min(grauEsquerda, grauDireita);
     }
+
+    @Override
+    public String descrever() {
+        return "(" + esquerda.descrever() + " E " + direita.descrever() + ")";
+    }
 }

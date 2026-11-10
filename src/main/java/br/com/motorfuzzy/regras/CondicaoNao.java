@@ -18,4 +18,9 @@ public class CondicaoNao implements CondicaoFuzzy {
 
         return 1.0 - condicao.avaliar(entradas);
     }
+
+    @Override
+    public String descrever() {
+        return "NÃO (" + condicao.descrever() + ")";
+    }
 }

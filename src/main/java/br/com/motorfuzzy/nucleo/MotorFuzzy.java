@@ -3,6 +3,8 @@ package br.com.motorfuzzy.nucleo;
 import br.com.motorfuzzy.conjuntos.ConjuntoFuzzy;
 import br.com.motorfuzzy.defuzzificacao.DefuzzificacaoCentroide;
 import br.com.motorfuzzy.defuzzificacao.MetodoDefuzzificacao;
+import br.com.motorfuzzy.explicabilidade.AtivacaoRegra;
+import br.com.motorfuzzy.explicabilidade.ResultadoDetalhado;
 import br.com.motorfuzzy.inferencia.ResultadoInferencia;
 import br.com.motorfuzzy.regras.RegraFuzzy;
 import br.com.motorfuzzy.variaveis.VariavelFuzzy;
@@ -17,6 +19,11 @@ public class MotorFuzzy {
     private final Map<String, VariavelFuzzy> variaveisEntrada;
     private final Map<String, VariavelFuzzy> variaveisSaida;
     private final List<RegraFuzzy> regras;
+
+    private record ExecucaoInferencia(
+            ResultadoInferencia resultado,
+            List<AtivacaoRegra> ativacoes
+    ) {}
 
     public MotorFuzzy() {
         variaveisEntrada = new HashMap<>();
@@ -61,6 +68,11 @@ public class MotorFuzzy {
 
     public ResultadoInferencia inferir(Map<String, Double> valoresEntrada, String nomeSaida) {
 
+        return executarInferencia(valoresEntrada, nomeSaida).resultado();
+    }
+
+    private ExecucaoInferencia executarInferencia(Map<String, Double> valoresEntrada, String nomeSaida) {
+
         if (valoresEntrada == null) {
             throw new IllegalArgumentException("Os valores de entrada não podem ser nulos.");
         }
@@ -84,12 +96,15 @@ public class MotorFuzzy {
             Map<String, Double> graus = variavel.fuzzificar(valor);
 
             for (Map.Entry<String, Double> entrada : graus.entrySet()) {
+
                 String chave = variavel.getNome() + "." + entrada.getKey();
+
                 grausFuzzificados.put(chave, entrada.getValue());
             }
         }
 
         ResultadoInferencia resultado = new ResultadoInferencia();
+        List<AtivacaoRegra> ativacoes = new ArrayList<>();
 
         for (RegraFuzzy regra : regras) {
 
@@ -102,9 +117,18 @@ public class MotorFuzzy {
             ConjuntoFuzzy conjuntoSaida = variavelSaida.obterConjunto(regra.getConjuntoSaida());
 
             resultado.adicionarContribuicao(conjuntoSaida, ativacao);
+
+            ativacoes.add(
+                    new AtivacaoRegra(
+                            regra.descrever(),
+                            regra.getVariavelSaida(),
+                            regra.getConjuntoSaida(),
+                            ativacao
+                    )
+            );
         }
 
-        return resultado;
+        return new ExecucaoInferencia(resultado, ativacoes);
     }
 
     public double calcular(Map<String, Double> valoresEntrada, String nomeSaida, double minimo, double maximo) {
@@ -121,5 +145,28 @@ public class MotorFuzzy {
         ResultadoInferencia resultado = inferir(valoresEntrada, nomeSaida);
 
         return metodo.calcular(resultado, minimo, maximo);
+    }
+
+    public ResultadoDetalhado calcularDetalhado(Map<String, Double> valoresEntrada, String nomeSaida, double minimo, double maximo) {
+
+        return calcularDetalhado(valoresEntrada, nomeSaida, minimo, maximo, new DefuzzificacaoCentroide());
+    }
+
+    public ResultadoDetalhado calcularDetalhado(Map<String, Double> valoresEntrada, String nomeSaida, double minimo, double maximo, MetodoDefuzzificacao metodo) {
+
+        if (metodo == null) {
+            throw new IllegalArgumentException("O método de defuzzificação não pode ser nulo.");
+        }
+
+        ExecucaoInferencia execucao = executarInferencia(valoresEntrada, nomeSaida);
+
+        double valorNumerico = metodo.calcular(execucao.resultado(), minimo, maximo);
+
+        return new ResultadoDetalhado(
+                valorNumerico,
+                nomeSaida,
+                metodo.getClass().getSimpleName(),
+                execucao.ativacoes()
+        );
     }
 }

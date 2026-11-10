@@ -52,4 +52,9 @@ public class CondicaoSimples implements CondicaoFuzzy {
 
         return grau;
     }
+
+    @Override
+    public String descrever() {
+        return variavel + " É " + conjunto;
+    }
 }

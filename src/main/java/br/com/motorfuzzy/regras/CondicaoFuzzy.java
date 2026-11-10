@@ -4,4 +4,5 @@ import java.util.Map;
 
 public interface CondicaoFuzzy {
     double avaliar(Map<String, Double> entradas);
+    String descrever();
 }

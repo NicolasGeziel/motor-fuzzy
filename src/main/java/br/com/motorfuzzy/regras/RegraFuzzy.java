@@ -9,26 +9,16 @@ public class RegraFuzzy {
     private final String variavelSaida;
     private final String conjuntoSaida;
 
-    public RegraFuzzy(
-            CondicaoFuzzy antecedente,
-            String variavelSaida,
-            String conjuntoSaida) {
+    public RegraFuzzy(CondicaoFuzzy antecedente, String variavelSaida, String conjuntoSaida) {
 
-        this.antecedente = Objects.requireNonNull(
-                antecedente,
-                "O antecedente não pode ser nulo."
-        );
+        this.antecedente = Objects.requireNonNull(antecedente, "O antecedente não pode ser nulo.");
 
         if (variavelSaida == null || variavelSaida.isBlank()) {
-            throw new IllegalArgumentException(
-                    "A variável de saída não pode ser vazia."
-            );
+            throw new IllegalArgumentException("A variável de saída não pode ser vazia.");
         }
 
         if (conjuntoSaida == null || conjuntoSaida.isBlank()) {
-            throw new IllegalArgumentException(
-                    "O conjunto de saída não pode ser vazio."
-            );
+            throw new IllegalArgumentException("O conjunto de saída não pode ser vazio.");
         }
 
         this.variavelSaida = variavelSaida;
@@ -45,5 +35,9 @@ public class RegraFuzzy {
 
     public String getConjuntoSaida() {
         return conjuntoSaida;
+    }
+
+    public String descrever() {
+        return "SE " + antecedente.descrever() + " ENTÃO " + variavelSaida + " É " + conjuntoSaida;
     }
 }

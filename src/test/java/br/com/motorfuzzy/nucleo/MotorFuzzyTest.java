@@ -1,5 +1,6 @@
 package br.com.motorfuzzy.nucleo;
 
+import br.com.motorfuzzy.explicabilidade.ResultadoDetalhado;
 import br.com.motorfuzzy.funcoes.FuncaoTriangular;
 import br.com.motorfuzzy.inferencia.ResultadoInferencia;
 import br.com.motorfuzzy.regras.CondicaoE;
@@ -112,6 +113,65 @@ class MotorFuzzyTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> motor.inferir(Map.of(), "risco")
+        );
+    }
+
+    @Test
+    void deveCalcularResultadoComExplicabilidade() {
+
+        VariavelFuzzy temperatura = new VariavelFuzzy("temperatura");
+
+        temperatura.adicionarConjunto(
+                "alta",
+                new FuncaoTriangular(20, 40, 60)
+        );
+
+        VariavelFuzzy risco = new VariavelFuzzy("risco");
+
+        risco.adicionarConjunto(
+                "alto",
+                new FuncaoTriangular(50, 75, 100)
+        );
+
+        MotorFuzzy motor = new MotorFuzzy();
+
+        motor.adicionarEntrada(temperatura);
+        motor.adicionarSaida(risco);
+
+        motor.adicionarRegra(
+                new RegraFuzzy(
+                        new CondicaoSimples("temperatura", "alta"),
+                        "risco",
+                        "alto"
+                )
+        );
+
+        ResultadoDetalhado resultado = motor.calcularDetalhado(
+                Map.of("temperatura", 30.0),
+                "risco",
+                0,
+                100
+        );
+
+        assertEquals(75.0, resultado.valorNumerico(), 0.001);
+
+        assertEquals("risco", resultado.variavelSaida());
+
+        assertEquals(
+                "DefuzzificacaoCentroide",
+                resultado.metodoDefuzzificacao()
+        );
+
+        assertEquals(1, resultado.regras().size());
+
+        assertEquals(
+                0.5,
+                resultado.regras().get(0).forcaAtivacao()
+        );
+
+        assertEquals(
+                "SE temperatura É alta ENTÃO risco É alto",
+                resultado.regras().get(0).descricao()
         );
     }
 }
