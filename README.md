@@ -5,7 +5,7 @@
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?logo=apachemaven&logoColor=white)
 ![JUnit 5](https://img.shields.io/badge/JUnit-5-25A162?logo=junit5&logoColor=white)
-![Versão](https://img.shields.io/badge/vers%C3%A3o-0.1.0--SNAPSHOT-blue)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-0.1.0-blue)
 
 ## Objetivo
 
@@ -233,28 +233,26 @@ mvn clean package
 O artefato será gerado em:
 
 ```text
-target/motor-fuzzy-0.1.0-SNAPSHOT.jar
+target/motor-fuzzy-0.1.0.jar
 ```
 
 ### Usando em outro projeto Maven
 
-Enquanto a biblioteca não estiver publicada em um repositório Maven remoto, instale-a **localmente**:
+O Motor Fuzzy está disponível no Maven Central.
 
-```bash
-mvn clean install
-```
-
-No `pom.xml` do projeto consumidor:
+Adicione a dependência ao `pom.xml` da sua aplicação:
 
 ```xml
 <dependency>
-    <groupId>br.com.motorfuzzy</groupId>
+    <groupId>io.github.nicolasgeziel</groupId>
     <artifactId>motor-fuzzy</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
-> A dependência acima funciona após `mvn install` na mesma máquina (ou quando o artefato estiver disponível em um repositório Maven configurado). **A biblioteca ainda não está publicada no Maven Central.**
+A biblioteca requer Java 21 ou superior. O Maven resolverá a dependência a partir do Maven Central, sem necessidade de copiar o código-fonte ou instalar o JAR manualmente.
+
+Consulte as [releases do projeto](https://github.com/NicolasGeziel/motor-fuzzy/releases) para acompanhar as versões.
 
 ## Testes
 
@@ -287,7 +285,7 @@ Os testes verificam os cenários implementados, **não garantem ausência de err
 
 ## Limitações atuais
 
-Esta é uma versão de desenvolvimento (`0.1.0-SNAPSHOT`), adequada a estudos e protótipos.
+Esta é a primeira versão pública (0.1.0) do Motor Fuzzy, destinada a estudos, protótipos e aplicações que utilizem inferência fuzzy Mamdani.
 
 - A aproximação por amostragem uniforme do centroide pode deixar de detectar regiões de pertinência **muito estreitas**. Ajustar a quantidade de divisões pode ajudar.
 - Na API atual, nomes de variáveis e conjuntos contendo `.` podem produzir **chaves internas ambíguas**. Prefira nomes sem ponto.
@@ -304,9 +302,11 @@ As regras desses sistemas serão implementadas nos **projetos consumidores**, e 
 
 ## Estado do projeto
 
-**Versão:** `0.1.0-SNAPSHOT`  
+**Versão:** `0.1.0`  
 **Linguagem:** Java 21  
 **Build:** Maven  
-**Testes:** JUnit 5 — 55 testes aprovados
+**Testes:** JUnit 5 — 55 testes aprovados  
+**Licença:** MIT  
+**Distribuição:** Maven Central
 
 Projeto desenvolvido para aprendizagem, experimentação e construção de aplicações de apoio à decisão com lógica fuzzy.
